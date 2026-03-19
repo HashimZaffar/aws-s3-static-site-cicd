@@ -13,6 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Show files before deploy
+        run: |
+          pwd
+          ls -la
+          echo "----- index.html from GitHub Actions runner -----"
+          cat index.html
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v6
         with:
@@ -26,3 +33,9 @@ jobs:
             --delete \
             --exclude ".git/*" \
             --exclude ".github/*"
+
+      - name: Verify uploaded file from S3
+        run: |
+          aws s3 cp s3://myusername-devops-website-2026/index.html deployed-index.html
+          echo "----- index.html now in S3 -----"
+          cat deployed-index.html
